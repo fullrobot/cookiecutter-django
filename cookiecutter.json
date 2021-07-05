@@ -45,6 +45,7 @@
   ],
   "use_async": "n",
   "use_drf": "n",
+  "use_graphql": "n",
   "custom_bootstrap_compilation": "n",
   "use_compressor": "n",
   "use_celery": "n",

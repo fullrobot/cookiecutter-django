@@ -40,7 +40,7 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-{% if cookiecutter.use_docker == "y" -%}
+{ % if cookiecutter.use_docker == "y" -%}
 DATABASES = {"default": env.db("DATABASE_URL")}
 {%- else %}
 DATABASES = {
@@ -74,14 +74,20 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-{%- if cookiecutter.use_celery == 'y' %}
+    {%- if cookiecutter.use_celery == 'y' %}
     "django_celery_beat",
-{%- endif %}
-{%- if cookiecutter.use_drf == "y" %}
+    {%- endif %}
+    {%- if cookiecutter.use_drf == "y" or cookiecutter.user_graphql == "y" %}
+    "corsheaders",
+    {%- endif %}
+    {%- if cookiecutter.use_drf == "y" %}
     "rest_framework",
     "rest_framework.authtoken",
-    "corsheaders",
-{%- endif %}
+    {%- endif %}
+    {% - if cookiecutter.user_graphql == "y" %}
+    "graphene_django",
+    "django_filters",
+    { % - endif -%}
 ]
 
 LOCAL_APPS = [
@@ -135,12 +141,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-{%- if cookiecutter.use_drf == 'y' %}
+    {%- if cookiecutter.use_drf == 'y' %}
     "corsheaders.middleware.CorsMiddleware",
-{%- endif %}
-{%- if cookiecutter.use_whitenoise == 'y' %}
+    {%- endif %}
+    {%- if cookiecutter.use_whitenoise == 'y' %}
     "whitenoise.middleware.WhiteNoiseMiddleware",
-{%- endif %}
+    {%- endif %}
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -269,7 +275,7 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
-{% if cookiecutter.use_celery == 'y' -%}
+{ % if cookiecutter.use_celery == 'y' -%}
 # Celery
 # ------------------------------------------------------------------------------
 if USE_TZ:
@@ -308,14 +314,14 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.SocialAccountAdapter"
-{% if cookiecutter.use_compressor == 'y' -%}
+{ % if cookiecutter.use_compressor == 'y' -%}
 # django-compressor
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
 INSTALLED_APPS += ["compressor"]
 STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 {%- endif %}
-{% if cookiecutter.use_drf == "y" -%}
+{ % if cookiecutter.use_drf == "y" -%}
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
@@ -331,5 +337,25 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 
 {%- endif %}
+{ % if cookiecutter.use_grpahql == "y" -%}
+# django-cors-headers
+# ------------------------------------------------------------------------------
+# https://github.com/ottoyiu/django-cors-headers#cors_origin_allow_all
+CORS_ORIGIN_ALLOW_ALL = True
+
+# Graphene Setup for GraphQL
+# ------------------------------------------------------------------------------
+# See: http://docs.graphene-python.org/projects/django/en/latest/tutorial-plain/#update-settings
+GRAPHENE = {
+    "SCHEMA": "{{ cookiecutter.project_slug }}.graphql.schema.schema",
+    "SCHEMA_OUTPUT": "frontend/src/apollo/schema.graphql",
+    "SCHEMA_INDENT": 2,
+    "MIDDLEWARE": ["graphene_django.debug.DjangoDebugMiddleware", ],
+}
+# NOTE: As Graphene schema gets larger, it needs more room to run the recursive graphql queries
+# See: https://github.com/graphql-python/graphene/issues/663
+GRAPHENE_RECURSION_LIMIT = env.int("GRAPHENE_RECURSION_LIMIT", default=3500)
+{%- endif %}
+
 # Your stuff...
 # ------------------------------------------------------------------------------

@@ -89,6 +89,9 @@ use_async:
 use_drf:
     Indicates whether the project should be configured to use `Django Rest Framework`_.
 
+use_graphql:
+    Indicates whether the project should be configured to use `Graphene Django`_.
+
 custom_bootstrap_compilation:
     Indicates whether the project should support Bootstrap recompilation
     via the selected JavaScript task runner's task. This can be useful
