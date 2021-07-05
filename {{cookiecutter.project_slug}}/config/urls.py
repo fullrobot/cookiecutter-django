@@ -1,20 +1,20 @@
-from graphene_django.views import GraphQLView
-from rest_framework.authtoken.views import obtain_auth_token
-from django.views.generic import TemplateView
-from django.views.decorators.csrf import csrf_exempt
-from django.views import defaults as default_views
-from django.urls import include, path
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 {%- if cookiecutter.use_async == 'y' %}
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 {%- endif %}
+from django.urls import include, path
+from django.views import defaults as default_views
 {% if cookiecutter.use_graphql %}
+from django.views.decorators.csrf import csrf_exempt
 {% endif %}
+from django.views.generic import TemplateView
 {%- if cookiecutter.use_drf == 'y' %}
+from rest_framework.authtoken.views import obtain_auth_token
 {%- endif %}
-{%- if cookiecutter.use_graphql == 'y' %}
+{%- if cookiecutter.use_graphql== 'y' %}
+from graphene_file_upload.django import FileUploadGraphQLView
 {%- endif %}
 
 urlpatterns = [
@@ -46,8 +46,11 @@ urlpatterns += [
 {% if cookiecutter.use_graphql == 'y' %}
 # GRAPHQL URLS
 urlpatterns += [
-    # Graphiql
-    path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    # GraphQL
+    path(
+        "graphql/",
+        csrf_exempt(FileUploadGraphQLView.as_view(graphiql=True, pretty=True)),
+    ),
 ]
 {%- endif %}
 
