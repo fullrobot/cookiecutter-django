@@ -319,6 +319,9 @@ def remove_drf_starter_files():
         )
     )
 
+def remove_graphql_starter_files():
+    shutil.rmtree(os.path.join("{{cookiecutter.project_slug}}", "graphql"))
+
 
 def remove_storages_module():
     os.remove(os.path.join("{{cookiecutter.project_slug}}", "utils", "storages.py"))
@@ -404,6 +407,9 @@ def main():
 
     if "{{ cookiecutter.use_drf }}".lower() == "n":
         remove_drf_starter_files()
+
+    if "{{ cookiecutter.use_graphql }}".lower() == "n":
+        remove_graphql_starter_files()
 
     if "{{ cookiecutter.use_async }}".lower() == "n":
         remove_async_files()

@@ -1,14 +1,20 @@
+from graphene_django.views import GraphQLView
+from rest_framework.authtoken.views import obtain_auth_token
+from django.views.generic import TemplateView
+from django.views.decorators.csrf import csrf_exempt
+from django.views import defaults as default_views
+from django.urls import include, path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 {%- if cookiecutter.use_async == 'y' %}
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 {%- endif %}
-from django.urls import include, path
-from django.views import defaults as default_views
-from django.views.generic import TemplateView
+{% if cookiecutter.use_graphql %}
+{% endif %}
 {%- if cookiecutter.use_drf == 'y' %}
-from rest_framework.authtoken.views import obtain_auth_token
+{%- endif %}
+{%- if cookiecutter.use_graphql == 'y' %}
 {%- endif %}
 
 urlpatterns = [
@@ -35,6 +41,13 @@ urlpatterns += [
     path("api/", include("config.api_router")),
     # DRF auth token
     path("auth-token/", obtain_auth_token),
+]
+{%- endif %}
+{% if cookiecutter.use_graphql == 'y' %}
+# GRAPHQL URLS
+urlpatterns += [
+    # Graphiql
+    path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
 ]
 {%- endif %}
 
