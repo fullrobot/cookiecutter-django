@@ -338,7 +338,7 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 
 {%- endif %}
-{% if cookiecutter.use_grpahql == "y" -%}
+{% if cookiecutter.use_graphql == "y" -%}
 # django-cors-headers
 # ------------------------------------------------------------------------------
 # https://github.com/ottoyiu/django-cors-headers#cors_origin_allow_all
