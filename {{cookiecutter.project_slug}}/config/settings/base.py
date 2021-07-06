@@ -78,14 +78,14 @@ THIRD_PARTY_APPS = [
     {%- if cookiecutter.use_celery == 'y' %}
     "django_celery_beat",
     {%- endif %}
-    {%- if cookiecutter.use_drf == "y" or cookiecutter.user_graphql == "y" %}
+    {%- if cookiecutter.use_drf == "y" or cookiecutter.use_graphql == "y" %}
     "corsheaders",
     {%- endif %}
     {%- if cookiecutter.use_drf == "y" %}
     "rest_framework",
     "rest_framework.authtoken",
     {%- endif %}
-    {% - if cookiecutter.user_graphql == "y" %}
+    {% - if cookiecutter.use_graphql == "y" %}
     "graphene_django",
     "django_filters",
     {% - endif -%}
