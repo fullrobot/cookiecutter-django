@@ -85,10 +85,10 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     {%- endif %}
-    {% - if cookiecutter.use_graphql == "y" %}
+    {%- if cookiecutter.use_graphql == "y" %}
     "graphene_django",
     "django_filters",
-    {% - endif -%}
+    {%- endif -%}
 ]
 
 LOCAL_APPS = [
